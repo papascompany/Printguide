@@ -30,6 +30,9 @@ status = "draft" if "--draft" in args else "publish"
 image_base = None
 if "--image-base" in args:
     image_base = args[args.index("--image-base") + 1].rstrip("/")
+split_n = None
+if "--split" in args:
+    split_n = int(args[args.index("--split") + 1])   # 파일당 글 수
 
 CDN_PREFIX = re.compile(r"https://cdn\.jsdelivr\.net/gh/papascompany/Printguide@[0-9a-f]+")
 
@@ -65,7 +68,12 @@ for c in cats:
 
 items = []
 posts = [json.loads(Path(f).read_text()) for f in glob.glob(str(ROOT / "data/ready/*.json"))]
-posts.sort(key=lambda p: p.get("date") or DEFAULT_DATE)
+# 카테고리(대분류>하위) 순 → 날짜 순 정렬 (분할 시 카테고리가 뭉치도록)
+parent_of = {str(c["categoryNo"]): c["parentCategoryNo"] for c in cats}
+def cat_key(p):
+    no = str(p.get("categoryNo", "")); par = parent_of.get(no)
+    return (str(par if par is not None else no), no, p.get("date") or DEFAULT_DATE)
+posts.sort(key=cat_key)
 for i, p in enumerate(posts, 1):
     date = p.get("date") or DEFAULT_DATE
     html = p["content_html"]
@@ -99,7 +107,7 @@ for i, p in enumerate(posts, 1):
         + (f"\t\t<category domain=\"category\" nicename=\"{slug(catno)}\">{cdata(catname)}</category>\n" if catname else "")
         + "\t</item>")
 
-xml = (
+HEADER = (
     '<?xml version="1.0" encoding="UTF-8"?>\n'
     '<rss version="2.0"\n'
     '\txmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"\n'
@@ -119,11 +127,26 @@ xml = (
     f'\t<wp:author><wp:author_id>1</wp:author_id><wp:author_login>{cdata(AUTHOR)}</wp:author_login>'
     f'<wp:author_email>admin@example.com</wp:author_email>'
     f'<wp:author_display_name>{cdata(AUTHOR)}</wp:author_display_name></wp:author>\n'
-    + "\n".join(cat_defs) + "\n"
-    + "\n".join(items) + "\n"
-    '</channel>\n</rss>\n')
+    + "\n".join(cat_defs) + "\n")
+FOOTER = '</channel>\n</rss>\n'
 
-out = ROOT / "cookthedesign.wordpress.xml"
-out.write_text(xml)
-print(f"WXR 생성: {out.name}  글 {len(items)}개 · 상태 {status} · 이미지베이스 {'(치환)'+image_base if image_base else '(jsDelivr 유지)'}")
-print(f"용량 {out.stat().st_size/1024/1024:.1f}MB")
+
+def write_wxr(path, item_chunk):
+    # 각 파일이 독립적으로 import 되도록 카테고리 정의를 모두 포함
+    path.write_text(HEADER + "\n".join(item_chunk) + "\n" + FOOTER)
+    return path.stat().st_size
+
+
+note = ('(치환)' + image_base) if image_base else '(jsDelivr 유지)'
+if split_n:
+    parts = [items[i:i + split_n] for i in range(0, len(items), split_n)]
+    n = len(parts)
+    for idx, chunk in enumerate(parts, 1):
+        p = ROOT / f"cookthedesign.wordpress.part{idx:02d}of{n:02d}.xml"
+        mb = write_wxr(p, chunk) / 1024 / 1024
+        print(f"  {p.name}  글 {len(chunk)}개 · {mb:.1f}MB")
+    print(f"WXR 분할 {n}개 파일 · 총 글 {len(items)} · 상태 {status} · 이미지 {note}")
+else:
+    out = ROOT / "cookthedesign.wordpress.xml"
+    mb = write_wxr(out, items) / 1024 / 1024
+    print(f"WXR 생성: {out.name}  글 {len(items)}개 · 상태 {status} · 이미지 {note} · {mb:.1f}MB")
