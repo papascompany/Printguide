@@ -1,0 +1,83 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>쿡더디자인 백업 작업 대시보드</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',Roboto,'Apple SD Gothic Neo',sans-serif;
+background:#0f172a;color:#e2e8f0;line-height:1.6;padding:32px 20px}
+.wrap{max-width:1080px;margin:0 auto}
+h1{font-size:28px;margin-bottom:4px}
+.sub{color:#94a3b8;margin-bottom:28px}
+h2{font-size:18px;margin:36px 0 16px;padding-left:10px;border-left:4px solid #6366f1}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px}
+.card-label{color:#94a3b8;font-size:13px}
+.card-val{font-size:30px;font-weight:700;color:#fff;margin:4px 0}
+.card-sub{color:#64748b;font-size:12px}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+.step{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px;flex:1;min-width:140px}
+.step-num{font-size:20px;color:#6366f1;font-weight:700}
+.step-name{font-weight:700;color:#fff;font-size:14px;margin:2px 0;font-family:monospace}
+.step-desc{font-size:12px;color:#cbd5e1}
+.step-meta{font-size:11px;color:#64748b;margin-top:6px}
+.arrow{display:flex;align-items:center;color:#475569;font-size:22px}
+.bar-row{display:flex;align-items:center;gap:12px;margin:10px 0}
+.bar-label{width:110px;text-align:right;color:#cbd5e1;font-size:14px;flex-shrink:0}
+.bar-track{flex:1;background:#1e293b;border-radius:8px;overflow:hidden;height:30px}
+.bar-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;
+padding-right:10px;color:#fff;font-weight:700;font-size:13px;border-radius:8px;min-width:32px}
+.cat-group{margin:14px 0}
+.cat-head{font-weight:700;color:#fff;padding-left:10px;border-left:3px solid;margin-bottom:8px}
+.cat-cnt{color:#94a3b8;font-weight:400;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:#1e293b;border:1px solid #334155;border-radius:20px;padding:4px 12px;font-size:12px;color:#cbd5e1}
+.chip b{color:#fff}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rule{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:18px}
+.rule h3{font-size:15px;color:#fff;margin-bottom:8px}
+.rule p{font-size:13px;color:#cbd5e1}
+.tag{display:inline-block;background:#334155;border-radius:6px;padding:2px 8px;font-family:monospace;font-size:12px;color:#a5b4fc;margin:2px}
+.ba{display:flex;gap:10px;margin-top:10px;font-size:12px}
+.ba div{flex:1;background:#0f172a;border:1px dashed #475569;border-radius:8px;padding:8px}
+.links a{display:inline-block;background:#6366f1;color:#fff;text-decoration:none;
+padding:8px 16px;border-radius:8px;margin:4px 6px 4px 0;font-size:14px}
+.links a.ghost{background:transparent;border:1px solid #475569;color:#cbd5e1}
+footer{margin-top:40px;color:#64748b;font-size:12px;text-align:center}
+@media(max-width:680px){.rules{grid-template-columns:1fr}.bar-label{width:80px}}
+</style></head><body><div class="wrap">
+<h1>🗂 쿡더디자인 블로그 → GitHub 백업</h1>
+<div class="sub">blog.naver.com/cookthedesign · 공개글 666개 · 2022. 9. 20. ~ 2026. 6. 15.</div>
+
+<h2>핵심 지표</h2>
+<div class="cards"><div class="card"><div class="card-label">공개글</div><div class="card-val">666</div><div class="card-sub">blog.naver.com/cookthedesign</div></div><div class="card"><div class="card-label">콘텐츠 이미지</div><div class="card-val">6,052</div><div class="card-sub">CDN 재호스팅</div></div><div class="card"><div class="card-label">제거된 푸터 배너</div><div class="card-val">675</div><div class="card-sub">홍보 배너 자동 제거</div></div><div class="card"><div class="card-label">카테고리</div><div class="card-val">4 / 32</div><div class="card-sub">대분류 / 하위</div></div><div class="card"><div class="card-label">기간</div><div class="card-val">2022. 9~</div><div class="card-sub">2026. 6. 15.</div></div><div class="card"><div class="card-label">백업 레포</div><div class="card-val">Printguide</div><div class="card-sub">papascompany (public)</div></div></div>
+
+<h2>처리 파이프라인</h2>
+<div class="pipe"><div class="step"><div class="step-num">①</div><div class="step-name">fetch_list</div><div class="step-desc">카테고리 + 글목록 수집</div><div class="step-meta">666 글, 40 카테고리</div></div><div class="arrow">→</div><div class="step"><div class="step-num">②</div><div class="step-name">scraper</div><div class="step-desc">본문 추출 · 브랜드 치환 · 푸터 제거</div><div class="step-meta">675 푸터 제거</div></div><div class="arrow">→</div><div class="step"><div class="step-num">③</div><div class="step-name">download_media</div><div class="step-desc">콘텐츠 이미지 다운로드</div><div class="step-meta">6052 장</div></div><div class="arrow">→</div><div class="step"><div class="step-num">④</div><div class="step-name">git push</div><div class="step-desc">papascompany/Printguide</div><div class="step-meta">jsDelivr CDN</div></div><div class="arrow">→</div><div class="step"><div class="step-num">⑤</div><div class="step-name">make_cdn_map · build</div><div class="step-desc">본문 URL → CDN 치환</div><div class="step-meta">data/ready/*</div></div><div class="arrow">→</div><div class="step"><div class="step-num">⑥</div><div class="step-name">build_index</div><div class="step-desc">카테고리 링크 목록</div><div class="step-meta">INDEX.md · index.html</div></div></div>
+
+<h2>카테고리별 글 분포 (대분류)</h2>
+<div class="bar-row"><span class="bar-label">쿡더디자인?!</span><div class="bar-track"><div class="bar-fill" style="width:12.6%;background:#6366f1"><span>61</span></div></div></div><div class="bar-row"><span class="bar-label">상품/디자인</span><div class="bar-track"><div class="bar-fill" style="width:100.0%;background:#10b981"><span>483</span></div></div></div><div class="bar-row"><span class="bar-label">프로그램</span><div class="bar-track"><div class="bar-fill" style="width:1.9%;background:#f59e0b"><span>9</span></div></div></div><div class="bar-row"><span class="bar-label">사이트 기획</span><div class="bar-track"><div class="bar-fill" style="width:23.4%;background:#ef4444"><span>113</span></div></div></div>
+
+<h2>카테고리 구조 (대분류 → 하위)</h2>
+<div class="cat-group"><div class="cat-head" style="border-color:#6366f1">쿡더디자인?! <span class="cat-cnt">61</span></div><div class="chips"><span class="chip">홍보디자인/영상 <b>12</b></span><span class="chip">공지사항 <b>16</b></span><span class="chip">배포 문서 <b>5</b></span><span class="chip">궁금증 게시판 <b>24</b></span></div></div><div class="cat-group"><div class="cat-head" style="border-color:#10b981">상품/디자인 <span class="cat-cnt">483</span></div><div class="chips"><span class="chip">AI <b>8</b></span><span class="chip">프로필명함 <b>22</b></span><span class="chip">포트폴리오 <b>4</b></span><span class="chip">명함 <b>24</b></span><span class="chip">스티커 <b>23</b></span><span class="chip">봉투 <b>6</b></span><span class="chip">리플렛 <b>25</b></span><span class="chip">브로셔/카탈로그 <b>18</b></span><span class="chip">책자/도록/출판 <b>8</b></span><span class="chip">패키지/박스 <b>215</b></span><span class="chip">쇼핑백/홀더/배너 <b>29</b></span><span class="chip">표지/포스터/낱장 <b>64</b></span><span class="chip">인트로/썸네일/카드뉴스 <b>4</b></span><span class="chip">CI/브랜드/로고 <b>6</b></span><span class="chip">디지털사이니지/상세페이지 <b>2</b></span><span class="chip">달력/기타/디자인전반 <b>25</b></span></div></div><div class="cat-group"><div class="cat-head" style="border-color:#f59e0b">프로그램 <span class="cat-cnt">9</span></div><div class="chips"><span class="chip">코렐드로우 <b>2</b></span><span class="chip">파워포인트 <b>3</b></span><span class="chip">엑셀 <b>4</b></span></div></div><div class="cat-group"><div class="cat-head" style="border-color:#ef4444">사이트 기획 <span class="cat-cnt">113</span></div><div class="chips"><span class="chip">기획스토리 <b>49</b></span><span class="chip">기획자료 <b>19</b></span><span class="chip">개발과정 <b>2</b></span><span class="chip">인쇄/패키지 솔루션 <b>43</b></span></div></div>
+
+<h2>본문 가공 규칙</h2>
+<div class="rules">
+  <div class="rule"><h3>① 브랜드명 치환</h3>
+    <p>보이는 텍스트의 브랜드명을 회사명으로 교체. URL·속성은 보존.</p>
+    <div class="ba"><div><b>전</b><br><span class="tag">쿡더디자인</span> <span class="tag">cookthedesign</span> <span class="tag">cook the design</span></div>
+    <div><b>후</b><br><span class="tag">(주)파파스컴퍼니</span></div></div></div>
+  <div class="rule"><h3>② 하단 푸터 배너 제거</h3>
+    <p>본문 맨 끝 <span class="tag">se-talktalk</span> 뒤가 전부 이미지/빈줄일 때, 그 홍보 배너(전화연결·홈페이지 바로가기)만 제거. 본문 중간 talktalk·옛 글은 미삭제.</p>
+    <div class="ba"><div><b>제거</b><br>675장</div><div><b>보존(콘텐츠)</b><br>6052장</div></div></div>
+</div>
+
+<h2>결과물</h2>
+<div class="links">
+  <a href="index.html">📑 카테고리별 글 목록</a>
+  <a class="ghost" href="사용매뉴얼.md">📘 사용 매뉴얼</a>
+  <a class="ghost" href="https://github.com/papascompany/Printguide" target="_blank">🐙 GitHub: Printguide</a>
+  <a class="ghost" href="https://blog.naver.com/cookthedesign" target="_blank">🔗 원본 블로그</a>
+</div>
+
+<footer>생성: make_dashboard.py · 통계는 data/_stats.json 기준</footer>
+</div></body></html>
